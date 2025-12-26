@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Universe Login - Twinkling Stars</title>
+<style>
+    body, html {
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
+        overflow: hidden;
+        background: radial-gradient(circle at center, #050510, #000000);
+        display: flex; justify-content: center; align-items: center;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Blinking Stars Background */
+    .stars-container {
+        position: fixed; width: 100%; height: 100%;
+        z-index: 1; pointer-events: none;
+    }
+    .star {
+        position: absolute; background: white; border-radius: 50%;
+        animation: blink var(--duration) infinite ease-in-out;
+        opacity: 0;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 0.2; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Universe Setup */
+    .universe {
+        position: fixed; width: 100vw; height: 100vh;
+        z-index: 2; display: flex; justify-content: center; align-items: center;
+        pointer-events: none;
+    }
+    .sun { font-size: 60px; z-index: 10; filter: drop-shadow(0 0 30px #ffaa00); }
+
+    .orbit {
+        position: absolute; border: 1.5px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%; animation: rotate linear infinite;
+        display: flex; justify-content: center;
+    }
+    .planet { position: absolute; top: -15px; font-size: 25px; filter: drop-shadow(0 0 10px currentColor); }
+
+    /* Colors and Sizes */
+    .mercury { color: #A5A5A5; }
+    .venus   { color: #FFE1A1; }
+    .earth   { color: #4facfe; }
+    .mars    { color: #ff6b6b; }
+    .jupiter { color: #ffcc99; font-size: 35px; top: -20px; }
+    .saturn  { color: #f0e68c; font-size: 35px; top: -20px; }
+    .uranus  { color: #81ecec; }
+    .neptune { color: #74b9ff; }
+
+    /* Orbiting Moon */
+    .moon-orbit { position: absolute; width: 45px; height: 45px; animation: rotate 3s linear infinite; }
+    .moon { color: #DDD; font-size: 10px; position: absolute; top: -5px; }
+
+    /* Orbit Speeds */
+    .o-mercury { width: 15vw; height: 15vw; animation-duration: 7s; }
+    .o-venus   { width: 25vw; height: 25vw; animation-duration: 12s; }
+    .o-earth   { width: 35vw; height: 35vw; animation-duration: 18s; }
+    .o-mars    { width: 45vw; height: 45vw; animation-duration: 25s; }
+    .o-jupiter { width: 60vw; height: 60vw; animation-duration: 40s; }
+    .o-saturn  { width: 75vw; height: 75vw; animation-duration: 55s; }
+    .o-uranus  { width: 90vw; height: 90vw; animation-duration: 75s; }
+    .o-neptune { width: 105vw; height: 105vw; animation-duration: 100s; }
+
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* Login Card */
+    .login-card {
+        position: relative; z-index: 100;
+        width: 300px; padding: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 30px; text-align: center; color: white;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+
+    input {
+        width: 100%; padding: 12px; margin: 10px 0;
+        background: rgba(255,255,255,0.1); border: none;
+        border-radius: 8px; color: white; outline: none; box-sizing: border-box;
+    }
+    .pass-container { position: relative; }
+    .monkey-icon {
+        position: absolute; right: 10px; top: 50%;
+        transform: translateY(-50%); cursor: pointer;
+        font-size: 22px; user-select: none;
+    }
+    .btn {
+        width: 100%; padding: 12px; margin-top: 20px;
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+        color: white; border: none; border-radius: 8px;
+        font-weight: bold; cursor: pointer; transition: 0.3s;
+    }
+    .btn:hover { box-shadow: 0 0 15px #2575fc; transform: scale(1.02); }
+</style>
+</head>
+<body>
+
+<div class="stars-container" id="stars"></div>
+
+<div class="universe">
+    <div class="sun">☀️</div>
+    <div class="orbit o-mercury"><span class="planet mercury">☿️</span></div>
+    <div class="orbit o-venus"><span class="planet venus">♀️</span></div>
+    <div class="orbit o-earth"><span class="planet earth">🌍<div class="moon-orbit"><span class="moon">🌙</span></div></span></div>
+    <div class="orbit o-mars"><span class="planet mars">♂️</span></div>
+    <div class="orbit o-jupiter"><span class="planet jupiter">♃</span></div>
+    <div class="orbit o-saturn"><span class="planet saturn">🪐</span></div>
+    <div class="orbit o-uranus"><span class="planet uranus">♅</span></div>
+    <div class="orbit o-neptune"><span class="planet neptune">♆</span></div>
+</div>
+
+<div class="login-card">
+    <h2 style="letter-spacing: 3px;">Welcome To My Universe</h2>
+    <input type="text" placeholder="Username">
+    <div class="pass-container">
+        <input type="password" id="password" placeholder="Password">
+        <span class="monkey-icon" id="monkey" onclick="togglePass()">🙈</span>
+    </div>
+    <button class="btn">Sign Up</button>
+</div>
+
+<script>
+    // 1. Monkey Password Toggle
+    function togglePass() {
+        const passInput = document.getElementById('password');
+        const monkey = document.getElementById('monkey');
+        if (passInput.type === "password") {
+            passInput.type = "text";
+            monkey.innerText = "🐵"; // Open eyes monkey
+        } else {
+            passInput.type = "password";
+            monkey.innerText = "🙈"; // See-no-evil monkey
+        }
+    }
+
+    // 2. Twinkling Stars Logic
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 250; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        // Random blinking speed for each star
+        star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+        star.style.animationDelay = Math.random() * 5 + 's';
+        starsContainer.appendChild(star);
+    }
+</script>
+
+</body>
+</html>
